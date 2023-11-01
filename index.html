@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Esquiva</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #player {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: blue;
+        }
+
+        .obstacle {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="player"></div>
+
+    <script>
+        const player = document.getElementById('player');
+        let score = 0;
+
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            const playerPosition = parseInt(window.getComputedStyle(player).left);
+
+            if (key === 'ArrowLeft' && playerPosition > 0) {
+                http://player.style.left = playerPosition - 10 + 'px';
+            } else if (key === 'ArrowRight' && playerPosition < window.innerWidth - 50) {
+                http://player.style.left = playerPosition + 10 + 'px';
+            }
+        });
+
+        function createObstacle() {
+            const obstacle = document.createElement('div');
+            obstacle.className = 'obstacle';
+            http://obstacle.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+            document.body.appendChild(obstacle);
+
+            const moveObstacle = setInterval(function() {
+                const obstaclePosition = parseInt(window.getComputedStyle(obstacle).top);
+
+                if (obstaclePosition < window.innerHeight) {
+                    http://obstacle.style.top = obstaclePosition + 10 + 'px';
+                } else {
+                    clearInterval(moveObstacle);
+                    document.body.removeChild(obstacle);
+                    score += 10;
+                }
+
+                const playerRect = player.getBoundingClientRect();
+                const obstacleRect = obstacle.getBoundingClientRect();
+
+                if (
+                    playerRect.bottom > http://obstacleRect.top &&
+                    http://playerRect.top < obstacleRect.bottom &&
+                    playerRect.right > obstacleRect.left &&
+                    playerRect.left < obstacleRect.right
+                ) {
+                    clearInterval(moveObstacle);
+                    alert('Game Over! Pontuação: ' + score);
+                    window.location.reload();
+                }
+            }, 50);
+        }
+
+        setInterval(createObstacle, 2000);
+    </script>
+</body>
+</html>
